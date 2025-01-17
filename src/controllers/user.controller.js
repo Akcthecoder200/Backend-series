@@ -18,6 +18,8 @@ const registerUser=asyncHandler(async (req,res)=>{
     //get details
     const {fullName, email, username, password } = req.body
     console.log("email: ", email);
+    // console.log(req.body);
+    
 
     //validation
     if(
@@ -37,7 +39,16 @@ const registerUser=asyncHandler(async (req,res)=>{
 
   // check for images, check for avatar...in this step files are at local system means yet not uploaded on cloudinary..
   const avatarLocalPath=req.files?.avatar[0]?.path
-  const coverImageLocalPath=req.files?.coverImage[0]?.path
+//   const coverImageLocalPath=req.files?.coverImage[0]?.path
+     
+     let coverImageLocalPath;
+     if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0){
+        coverImageLocalPath=req.files.coverImage[0].path
+     }
+
+
+    console.log(req.files);
+  
 
     if(!avatarLocalPath){
         throw new ApiError(400,"Avatar file is required")
@@ -58,7 +69,7 @@ const registerUser=asyncHandler(async (req,res)=>{
         avatar:avatar.url,
         coverImage:coverImage?.url || "",
         email,password,
-        user:username.toLowerCase()
+        username:username.toLowerCase()
 
     })
        
